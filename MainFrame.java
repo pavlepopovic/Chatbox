@@ -42,6 +42,12 @@ public class MainFrame extends JFrame {
 		chatBox.append("\n");
 	}
 	
+	
+	public void update_userList (String [] newUserList) {
+		clients.setListData(newUserList);
+	}
+	
+	
 	public void setBorders() {
 		
 		/*
@@ -106,8 +112,8 @@ public class MainFrame extends JFrame {
 					// nothing to do if user didn't write a message
 					
 					
-					String client_message = userName + ": " + msgBuffer.getText();
-					
+					String message_text = userName + ": " + msgBuffer.getText();
+					String client_message = "<!>"+Client.UPDATE_CHATBOX+"<!>"+message_text+"<!>";
 					output.println(client_message);
 					
 					msgBuffer.setText(null);
@@ -168,11 +174,7 @@ public class MainFrame extends JFrame {
 		center.add(chatBoxScroll,BorderLayout.CENTER);
 		south.add(msgBufferScroll,BorderLayout.CENTER);
 		
-		String test [] = { "Pavle Popovic", "Djordje Ponjavic", "Radisa Mitroivc", "Nenad Rakonjac"};
-		
-		
-		
-		clients.setListData(test);
+
 		
 		
 		// disables selection from JList elements
@@ -233,12 +235,15 @@ public class MainFrame extends JFrame {
 			public void windowClosing(WindowEvent e) {
 				// TODO Auto-generated method stub
 				try {
+					String remove_user_msg="<!>"+Client.REMOVE_USER+"<!>"+userName+"<!>";
+					output.println(remove_user_msg);
 					clientSide.close();
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				System.exit(0);
+				
 			}
 		});
 		

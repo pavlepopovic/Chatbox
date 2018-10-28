@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.StringTokenizer;
 
 public class HandleClientCommunication extends Thread {
 	
@@ -22,7 +23,23 @@ public class HandleClientCommunication extends Thread {
 	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+		
+		/*
+		 * Client message format:
+		 *   <!>messageID<!>messageText<!>
+		 *   
+		 *   messageID could be:
+		 *   	1) Server.CREATE_NEW_USER
+		 *   	2) Server.UPDATE_CHATBOX
+		 *   	3) Server.DELETE_USER
+		 *   
+		 *   
+		 */
+		
+		
+		
+		
+		
 		try {
 			while (true) {
 				
@@ -38,7 +55,25 @@ public class HandleClientCommunication extends Thread {
 			
 			
 			
-			Server.ChatBoxUpdate_NewMessage(clientMsg);
+			StringTokenizer msg_tokens = new StringTokenizer(clientMsg, "<!>");
+			int msg_id = Integer.parseInt(msg_tokens.nextToken());
+			
+			switch (msg_id) {
+				case Server.UPDATE_CHATBOX:
+					// message format: <!>message_ID<!>message_text<!>
+					Server.ChatBoxUpdate_NewMessage(msg_tokens.nextToken());
+					break;
+				case Server.CREATE_NEW_USER:
+					Server.addUser(msg_tokens.nextToken());
+					Server.userList_update();
+					//message format: <!>message_ID<!>new_userName<!>
+					break;
+				case Server.REMOVE_USER:
+					//message format: <!>message_ID<!>userName<!>
+					Server.removeUser(msg_tokens.nextToken());
+					Server.userList_update();
+					break;
+			}
 			
 			//send reply to all users
 			
@@ -47,7 +82,7 @@ public class HandleClientCommunication extends Thread {
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 		}
 		
 		try {

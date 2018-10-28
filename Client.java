@@ -12,6 +12,9 @@ public class Client {
 	private static final int port = 5555;
 	private static final String serverIP = "192.168.0.23";
 	
+	
+	public static final int CREATE_NEW_USER=1, UPDATE_CHATBOX=2, REMOVE_USER=3;
+	
 	public static void main (String [] args) throws UnknownHostException, IOException {
 		
 		

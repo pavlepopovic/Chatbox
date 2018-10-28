@@ -3,7 +3,10 @@ package chatbox;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 import javax.swing.JButton;
@@ -41,9 +44,16 @@ public class QueryFrame extends JFrame {
 				String name = userName.getText();
 				if (name.isEmpty() == false) {
 					try {
-						MainFrame clientGUI = new MainFrame ("ChatBox",name,clientSide);
+						MainFrame clientGUI = new MainFrame (name+"'s chatBox",name,clientSide);
 						
 						(new HandleServerInput(clientSide, clientGUI)).start();
+						
+						PrintWriter output = new PrintWriter (clientSide.getOutputStream(),true);
+						
+						String newUserMessage = "<!>"+Client.CREATE_NEW_USER+"<!>"+name+"<!>";
+						output.println(newUserMessage);
+						
+						
 						
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
@@ -59,6 +69,22 @@ public class QueryFrame extends JFrame {
 		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				// TODO Auto-generated method stub
+				try {
+					clientSide.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				System.exit(0);
+			}
+		});
+		
+		
 		
 	}
 }
